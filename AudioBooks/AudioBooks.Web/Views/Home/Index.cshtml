@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Audio Books Home</h1>
+
+    <br />
+    <br />
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <h3> User is not authenticated ! Lin IDP will be contacted when tried to access Library</h3>
+    }
+    <br /><br />    <br /><br />
+    @Html.ActionLink("Go To Library", "Index", "Library", null, new { @class = "btn btn-info" })
+
+</div>

@@ -1,0 +1,16 @@
+﻿@model AudioBooks.Model.AudioBookItemSummaryModel 
+<div class="row bookrow ">
+    <img src="~/lib/book-cover/@Model.CoverImageFileName" alt="@Model.AudioBookName" class=" img-thumbnail img-cover col-lg-3" />
+
+    <div class="card col-lg-7 middle-column">
+        <div class="card-body">
+            <h5 class="card-title">@Model.AudioBookName</h5>
+            <h6 class="card-subtitle mb-2 text-muted">By @Model.AuthorName</h6>
+            <p class="card-text">@Model.QuickText</p>
+            <a href="@Model.AudibleLink" class="card-link">Audible Link</a>
+        </div>
+    </div>
+    <div class="col-lg-1">
+        <a href="#" class="btn btn-primary stretched-link" alt="More Details">...</a>
+    </div> 
+</div>

@@ -1,0 +1,30 @@
+﻿@model AudioBookSummaryListViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .bookrow {
+        border-radius: 3px;
+        margin-bottom: 10px;
+        vertical-align: middle;
+    }
+
+    .middle-column {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .img-cover {
+        height: 200px;
+    }
+</style>
+<h1>My Library</h1>
+<br />
+<div>
+
+    @foreach (var modal in Model.AudioBooks)
+    {
+        await Html.RenderPartialAsync("AudioBookRow", modal);
+    }
+
+</div>
