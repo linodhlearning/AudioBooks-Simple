@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +16,7 @@ namespace AudioBooks.Web
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-        } 
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -30,6 +32,28 @@ namespace AudioBooks.Web
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
+
+            var idpUri = _configuration.GetValue<string>("Apis:IDP");// "https://localhost:55441/"
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.Authority = idpUri;
+                options.ClientId = "audiobookwebclient";
+                options.ResponseType = "code"; //CODE FLOW
+                options.UsePkce = true;//PROOF KEY OF CODE EXCHANGE
+                //options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("..");// customise redirect uri of signin-oidc
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.SaveTokens = true;
+                options.ClientSecret = "test_secret";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,10 +72,12 @@ namespace AudioBooks.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+            app.UseRouting();// has route data
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            // mvc routing
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

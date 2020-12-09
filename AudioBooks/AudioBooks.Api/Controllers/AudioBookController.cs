@@ -52,7 +52,7 @@ namespace AudioBooks.Api.Controllers
             {
                 // this._telemetry.TrackEvent(new EventTelemetry($"AudioBookController : GetAudioBook - Start retrieving audiobook with Id : {id }"));               
                 var data = await _audioBookRepository.GetAudioBookById(id);
-                var result = _mapper.Map<IEnumerable<AudioBookItemModel>>(data);
+                var result = _mapper.Map<AudioBookItemModel>(data);
                 //  this._telemetry.TrackEvent(new EventTelemetry($"AudioBookController : GetAudioBook - Finish retrieving audiobook with Id : {id}"));
                 return Ok(result);
             }
