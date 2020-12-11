@@ -17,10 +17,28 @@
     .img-cover {
         height: 200px;
     }
+
+    .button-container {
+        margin: 10px;
+        padding-bottom: 5px;
+    }
 </style>
 <h1>My Library</h1>
 <br />
 <div>
+    @if (Model.CanAddAudioBooks)
+    {
+        using (Html.BeginForm("AddAudioBook", "Library"))
+        {
+            <div class="button-container row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add</button>
+                </div>
+            </div>
+        }
+    }
+
 
     @foreach (var modal in Model.AudioBooks)
     {

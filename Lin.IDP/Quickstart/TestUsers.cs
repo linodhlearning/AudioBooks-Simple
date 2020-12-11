@@ -27,7 +27,12 @@ namespace IdentityServerHost.Quickstart.UI
                         Claims =
                         {
                           new Claim("given_name","Henry"),
-                          new Claim("family_name","Cavill")
+                          new Claim("family_name","Cavill"),
+                          new Claim("email","henry@superman.com"),
+                          new Claim("address","15 krypton ave "),
+                          new Claim("gender","male"),
+                          new Claim("role","customer")
+
                         }},
                     new TestUser
                     {
@@ -37,7 +42,11 @@ namespace IdentityServerHost.Quickstart.UI
                         Claims =
                         {
                           new Claim("given_name","Tobby"),
-                          new Claim("family_name","Mcguire")
+                          new Claim("family_name","Mcguire"),
+                          new Claim("email","tobby@spiderman.com"),
+                          new Claim("address","18 brooklyn ave "),
+                          new Claim("gender","male"),
+                             new Claim("role","admin")
                         }
                     }
                 };

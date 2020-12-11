@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityModel;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AudioBooks.Web
 {
@@ -16,6 +20,8 @@ namespace AudioBooks.Web
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
+            //ASP.NET Core also does some magic mapping as a default.Some claims are removed, and some are added. If you want to take control of this, you can turn this off as follows:
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -33,13 +39,27 @@ namespace AudioBooks.Web
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
 
-            var idpUri = _configuration.GetValue<string>("Apis:IDP");// "https://localhost:55441/"
+            var idpUri = _configuration.GetValue<string>("Apis:IDP");//"https://localhost:55441/"
+
+
+            // create an HttpClient used for accessing the API
+            services.AddHttpClient("LinIDPClient", client =>
+            {
+                client.BaseAddress = new Uri(idpUri);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            });
+
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,options=>
+            {
+                options.AccessDeniedPath = "/Authorization/AccessDenied";
+            })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -48,10 +68,27 @@ namespace AudioBooks.Web
                 options.ResponseType = "code"; //CODE FLOW
                 options.UsePkce = true;//PROOF KEY OF CODE EXCHANGE
                 //options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("..");// customise redirect uri of signin-oidc
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
+              //  options.Scope.Add("openid"); //default no need to explicitly define this
+              //  options.Scope.Add("profile");//default no need to explicitly define this
+                options.Scope.Add("email");
+                options.Scope.Add("address");
+                options.Scope.Add("roles");
+
+                /*Delete from the ID_TOken*/
+                options.ClaimActions.DeleteClaim("sid");
+                options.ClaimActions.DeleteClaim("idp");
+                options.ClaimActions.DeleteClaim("s_hash");
+                options.ClaimActions.DeleteClaim("auth_time");
+
+                options.ClaimActions.MapUniqueJsonKey("role", "role");
                 options.SaveTokens = true;
                 options.ClientSecret = "test_secret";
+                options.GetClaimsFromUserInfoEndpoint = true;//get call to user info end point using access token
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = JwtClaimTypes.GivenName,
+                    RoleClaimType = JwtClaimTypes.Role
+                };
             });
 
         }

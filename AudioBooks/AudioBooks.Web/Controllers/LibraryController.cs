@@ -35,8 +35,16 @@ namespace AudioBooks.Web.Controllers
 
             using (var responseStream = await response.Content.ReadAsStreamAsync())
             {
-                return View(new AudioBookSummaryListViewModel(await JsonSerializer.DeserializeAsync<List<Model.AudioBookItemSummaryModel>>(responseStream)));
+                var model = new AudioBookSummaryListViewModel(await JsonSerializer.DeserializeAsync<List<Model.AudioBookItemSummaryModel>>(responseStream));
+                model.CanAddAudioBooks = true;
+                return View(model);
             }
+        }
+
+        [Authorize(Roles = "admin, contentadmin")]
+        public IActionResult AddAudioBook()
+        {
+            return View("AddAudioBook");
         }
 
         public async Task WriteOutIdentityInfo()
@@ -49,4 +57,4 @@ namespace AudioBooks.Web.Controllers
             }
         }
     }
-} 
+}
