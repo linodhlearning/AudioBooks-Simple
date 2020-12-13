@@ -55,6 +55,9 @@ namespace AudioBooks.Web.Controllers
             {
                 System.Diagnostics.Debug.WriteLine($"Claim Type: {claim.Type} - Claim Value: {claim.Value}");
             }
+
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+            System.Diagnostics.Debug.WriteLine($"Access  Token: {accessToken}");
         }
     }
 }

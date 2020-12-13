@@ -28,12 +28,11 @@ namespace Lin.IDP
                 // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
                 options.EmitStaticAudienceClaim = true;
             })
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients)
-                .AddTestUsers(IdentityServerHost.Quickstart.UI.TestUsers.Users);
-
-             
+            .AddInMemoryIdentityResources(Config.IdentityResources)        
+            .AddInMemoryApiResources(Config.ApiResources)
+            .AddInMemoryApiScopes(Config.ApiScopes)
+            .AddInMemoryClients(Config.Clients)
+            .AddTestUsers(IdentityServerHost.Quickstart.UI.TestUsers.Users);
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();

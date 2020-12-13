@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AudioBooks.Response;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AudioBooks.Api.Controllers
 {
     [Route("api/audiobooks")]
     [ApiController]
+    [Authorize]
     public class AudioBookController : BaseController
     {
         private readonly IAudioBookRepository _audioBookRepository;

@@ -11,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 
 using Microsoft.ApplicationInsights.Extensibility;
+using IdentityServer4.AccessTokenValidation;
+
 namespace AudioBooks.Api
 {
     public class Startup
@@ -26,23 +28,30 @@ namespace AudioBooks.Api
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddMemoryCache();
+
             services.AddControllers()
-                        .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);/*use pascal case*/
+            .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);/*use pascal case*/
+
+
+            var idpUri = this.Configuration.GetValue<string>("Apis:IDP");//"https://localhost:55441/"
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)// Auth scheme is Bearer
+                .AddIdentityServerAuthentication(options =>
+                {  // base-address of your identityserver
+                    options.Authority = "https://localhost:55441";
+                    options.ApiName = "audiobooksapi";
+                });
+
+
             services.AddDbContext<AudioBookContext>(opt =>
-            opt.UseSqlServer(Configuration.GetConnectionString("AudioBookContextConnection"))
+                opt.UseSqlServer(Configuration.GetConnectionString("AudioBookContextConnection"))
             // .EnableSensitiveDataLogging()
             );
 
             // Inject Application Insights
-            services.AddApplicationInsightsTelemetry();
-            services.AddSingleton(Configuration);
-            services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>(t => new TelemetryInitializer(Configuration["ApplicationInsights:cloud_roleName"]));
-
-
+            this.ConfigureApplicationInsights(services);
 
             //register services and repositories
             this.ConfigureServiceRepositories(services);
-
 
             // register AutoMapper-related services
             //services.AddAutoMapper(typeof(Startup));
@@ -50,6 +59,13 @@ namespace AudioBooks.Api
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
+        }
+
+        private void ConfigureApplicationInsights(IServiceCollection services)
+        {
+            services.AddApplicationInsightsTelemetry();
+            services.AddSingleton(Configuration);
+            services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>(t => new TelemetryInitializer(Configuration["ApplicationInsights:cloud_roleName"]));
         }
 
         private void ConfigureServiceRepositories(IServiceCollection services)
@@ -75,10 +91,8 @@ namespace AudioBooks.Api
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Audiobooks API V1");
-                   // c.RoutePrefix = string.Empty;
+                    // c.RoutePrefix = string.Empty;
                 });
-
-
             }
             else
             {
@@ -100,6 +114,7 @@ namespace AudioBooks.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

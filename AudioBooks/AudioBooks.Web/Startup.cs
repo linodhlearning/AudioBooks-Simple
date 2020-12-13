@@ -11,6 +11,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
+using AudioBooks.Web.HttpHandlers;
 
 namespace AudioBooks.Web
 {
@@ -30,6 +31,9 @@ namespace AudioBooks.Web
             services.AddControllersWithViews()
                 .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+            services.AddHttpContextAccessor();
+            services.AddTransient<BearerTokenHandler>();
+
             // create an HttpClient used for accessing the API
             services.AddHttpClient("AudioBooksAPIClient", client =>
             {
@@ -37,10 +41,10 @@ namespace AudioBooks.Web
                 client.BaseAddress = new Uri(audioBookApiUri);/*https://localhost:44305*/
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
-            });
+            })
+            .AddHttpMessageHandler<BearerTokenHandler>();
 
-            var idpUri = _configuration.GetValue<string>("Apis:IDP");//"https://localhost:55441/"
-
+            var idpUri = _configuration.GetValue<string>("Apis:IDP");/*"https://localhost:55441/"*/
 
             // create an HttpClient used for accessing the API
             services.AddHttpClient("LinIDPClient", client =>
@@ -56,10 +60,10 @@ namespace AudioBooks.Web
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,options=>
-            {
-                options.AccessDeniedPath = "/Authorization/AccessDenied";
-            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+             {
+                 options.AccessDeniedPath = "/Authorization/AccessDenied";
+             })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -67,12 +71,13 @@ namespace AudioBooks.Web
                 options.ClientId = "audiobookwebclient";
                 options.ResponseType = "code"; //CODE FLOW
                 options.UsePkce = true;//PROOF KEY OF CODE EXCHANGE
-                //options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("..");// customise redirect uri of signin-oidc
-              //  options.Scope.Add("openid"); //default no need to explicitly define this
-              //  options.Scope.Add("profile");//default no need to explicitly define this
+                                       //options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("..");// customise redirect uri of signin-oidc
+                                       //  options.Scope.Add("openid"); //default no need to explicitly define this
+                                       //  options.Scope.Add("profile");//default no need to explicitly define this
                 options.Scope.Add("email");
                 options.Scope.Add("address");
                 options.Scope.Add("roles");
+                options.Scope.Add("audiobooksapi");
 
                 /*Delete from the ID_TOken*/
                 options.ClaimActions.DeleteClaim("sid");

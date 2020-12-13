@@ -39,7 +39,23 @@ namespace Lin.IDP
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
-            { };
+            {
+                new ApiScope("audiobooksapi","Access granted to Audiobooks Api")
+            };
+
+        public static IEnumerable<ApiResource> ApiResources =>
+             new ApiResource[]
+            {
+                new ApiResource
+                {
+                    Name="audiobooksapi",
+                    DisplayName="Audiobooks Api",
+                    Scopes={ "audiobooksapi" },
+                    UserClaims = new List<string>() { "role", "given_name" }
+                }
+            };
+
+
 
         public static IEnumerable<Client> Clients =>
             new Client[]
@@ -57,7 +73,8 @@ namespace Lin.IDP
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.Address,
-                    "roles"
+                    "roles",
+                    "audiobooksapi"
                 },
                 ClientSecrets={new Secret("test_secret".Sha256())},
                // AlwaysIncludeUserClaimsInIdToken = true,// bad practice to turn this on as user claims will be send into ID_Token
