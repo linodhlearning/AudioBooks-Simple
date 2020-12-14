@@ -22,11 +22,26 @@ namespace AudioBooks.Api.SeedData
                     return;   // DB has been already seeded
                 }
 
+                PopulateCategoryData(dbContext);
                 PopulateTestData(dbContext);
+                //Category thrillerCategory = new Category { CategoryName = "Thriller" };
+                //Category thrillerCategory = new Category { CategoryName = "Thriller" };
             }
         }
+
+        private static void PopulateCategoryData(AudioBookContext dbContext)
+        {
+            dbContext.Categories.Add(new Category { CategoryName = "Adventure" });
+            dbContext.Categories.Add(new Category { CategoryName = "Romance" });
+            dbContext.Categories.Add(new Category { CategoryName = "Sci Fi" });
+            dbContext.Categories.Add(new Category { CategoryName = "Thriller" });
+            dbContext.SaveChanges();
+        }
+
         public static void PopulateTestData(AudioBookContext dbContext)
         {
+            var adventureCategoryId = dbContext.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == "adventure")?.Id;
+            var thrillerCategoryId = dbContext.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == "thriller")?.Id;
             Publisher penguinPublisher = new Publisher { PublisherName = "Penguin" };
             Author leeChildAuthor = new Author { AuthorName = "Lee Child" };
 
@@ -40,11 +55,13 @@ namespace AudioBooks.Api.SeedData
                 },
                 Author = leeChildAuthor,
                 Description = @"Although the Jack Reacher audiobooks can be listened to in any order, Killing Floor presents Reacher for the first time, as the tough ex-military cop of no fixed abode: a righter of wrongs, the perfect action hero.Jack Reacher jumps off a bus and walks 14 miles down a country road into Margrave, Georgia. An arbitrary decision he's about to regret........ ",
-                Name= "Killing Floor",
-                PublishedDate=new DateTime(1998,01,01),
-                Publisher= penguinPublisher,
+                Name = "Killing Floor",
+                PublishedDate = new DateTime(1998, 01, 01),
+                Publisher = penguinPublisher,
                 QuickSummary = @"Jack Reacher jumps off a bus and walks 14 miles down a country road into Margrave, Georgia. An arbitrary decision he's about to regret."
             };
+            if (thrillerCategoryId.HasValue)
+            { audioBook1.AudioBookCategories.Add(new AudioBookCategory { CategoryId = thrillerCategoryId.Value }); }
             dbContext.AudioBooks.Add(audioBook1);
 
 
@@ -63,6 +80,10 @@ namespace AudioBooks.Api.SeedData
                 Publisher = penguinPublisher,
                 QuickSummary = @"A Chicago street in bright sunshine. A young woman, struggling on crutches. Reacher offers her a steadying arm.."
             };
+            if (adventureCategoryId.HasValue)
+            { audioBook2.AudioBookCategories.Add(new AudioBookCategory { CategoryId = adventureCategoryId.Value }); }
+            if (thrillerCategoryId.HasValue)
+            { audioBook2.AudioBookCategories.Add(new AudioBookCategory { CategoryId = thrillerCategoryId.Value }); }
 
             dbContext.AudioBooks.Add(audioBook2);
 
@@ -79,15 +100,14 @@ namespace AudioBooks.Api.SeedData
                 Name = "Die Trying",
                 PublishedDate = new DateTime(2013, 01, 01),
                 Publisher = penguinPublisher,
-                QuickSummary = @"He spends his days digging swimming pools by hand and his nights as the bouncer in the local strip club in the Florida Keys.
-
-"
+                QuickSummary = @"He spends his days digging swimming pools by hand and his nights as the bouncer in the local strip club in the Florida Keys."
             };
-
+            if (thrillerCategoryId.HasValue)
+            { audioBook3.AudioBookCategories.Add(new AudioBookCategory { CategoryId = thrillerCategoryId.Value }); }
 
             dbContext.AudioBooks.Add(audioBook3);
 
             dbContext.SaveChanges();
         }
-}
+    }
 }

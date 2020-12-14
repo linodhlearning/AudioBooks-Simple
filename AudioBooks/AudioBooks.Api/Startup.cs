@@ -12,6 +12,7 @@ using System;
 
 using Microsoft.ApplicationInsights.Extensibility;
 using IdentityServer4.AccessTokenValidation;
+using AudioBooks.Api.Repositories.Contracts;
 
 namespace AudioBooks.Api
 {
@@ -27,7 +28,7 @@ namespace AudioBooks.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMemoryCache();
+            services.AddMemoryCache();//todo use redis cache in future
 
             services.AddControllers()
             .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);/*use pascal case*/
@@ -71,10 +72,8 @@ namespace AudioBooks.Api
         private void ConfigureServiceRepositories(IServiceCollection services)
         {
             services.AddScoped<IAudioBookRepository, AudioBookRepository>();
+            services.AddScoped<ILookupDataRepository, LookupDataRepository>();
         }
-
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

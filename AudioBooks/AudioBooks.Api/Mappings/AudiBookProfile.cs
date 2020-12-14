@@ -1,6 +1,9 @@
 ﻿using AudioBooks.Domain;
 using AutoMapper;
 using AudioBooks.Model;
+using System.Linq;
+using System;
+
 namespace AudioBooks.Api.Mappings
 {
     public class AudiBookProfile : Profile
@@ -16,6 +19,10 @@ namespace AudioBooks.Api.Mappings
                 .ForMember(dest => dest.AudibleLink, opt => opt.MapFrom(src => src.Audio.AudibleLink))
                  .ReverseMap();
 
+            CreateMap<Author, LookupItemModel>().ForMember(dest=> dest.Name,opt=>opt.MapFrom(src=> src.AuthorName));
+            CreateMap<Category, LookupItemModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CategoryName));
+            CreateMap<Publisher, LookupItemModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PublisherName));
+
             CreateMap<AudioBook, AudioBookItemModel>()
             .ForMember(dest => dest.AudioBookId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.QuickText, opt => opt.MapFrom(src => src.QuickSummary))
@@ -25,8 +32,18 @@ namespace AudioBooks.Api.Mappings
             .ForMember(dest => dest.AudibleLink, opt => opt.MapFrom(src => src.Audio.AudibleLink))
             .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher.PublisherName))
             .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Audio.DurationInMinutes))
-            .ReverseMap();
+            .ForMember(dest => dest.Categories, opt => opt.Ignore())
+            .ReverseMap()
+            .AfterMap(MapCategories);
 
         }
+
+        private void MapCategories(AudioBookItemModel model, AudioBook audioBook)
+        {
+            model.Categories = audioBook.AudioBookCategories.Select(c => c.Category.CategoryName).ToList();
+        }
     }
+
+
+
 }

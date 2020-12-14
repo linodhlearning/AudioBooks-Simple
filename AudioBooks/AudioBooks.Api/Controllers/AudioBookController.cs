@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AudioBooks.Response;
 using Microsoft.AspNetCore.Authorization;
+using AudioBooks.Api.Repositories.Contracts;
 
 namespace AudioBooks.Api.Controllers
 {
@@ -66,5 +67,44 @@ namespace AudioBooks.Api.Controllers
             }
         }
 
+
+        [HttpPost(Name = "AddAudioBook")]
+        public async Task<IActionResult> CreateAudioBook([FromBody] AudioBookItemModel model)
+        {
+            try
+            {
+                var audioBookDomain = _mapper.Map<Domain.AudioBook>(model);
+                var audioBookId = await _audioBookRepository.CreateAudioBook(audioBookDomain);
+                return Ok(audioBookId);
+            }
+            catch (Exception ex)
+            {
+                this._telemetry.TrackException(ex);
+                var response = LookupResponse<AudioBookItemModel>.BuildErrorResponse("FailedAddAudioBook", "Could not add a new audiobook");
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut("{id}", Name = "UpdateAudioBook")]
+        public async Task<IActionResult> UpdateAudioBook(int id, [FromBody] AudioBookItemModel model)
+        {
+            if (id != model.AudioBookId)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var audioBookDomain = _mapper.Map<Domain.AudioBook>(model);
+                var status = await _audioBookRepository.UpdateAudioBook(audioBookDomain);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+                this._telemetry.TrackException(ex);
+                var response = LookupResponse<AudioBookItemModel>.BuildErrorResponse("FailedAudioBookUpdate", "Could not update the audiobook");
+                return BadRequest(response);
+            }
+        }
     }
 }

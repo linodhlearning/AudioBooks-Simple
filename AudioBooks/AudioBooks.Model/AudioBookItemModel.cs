@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AudioBooks.Model
 {
@@ -14,7 +15,9 @@ namespace AudioBooks.Model
 
         public string Description { get; set; }
         public string PublisherName { get; set; }
-        public DateTime PublishedDate { get; set; } 
-        public string Duration { get; set; } 
+        public DateTime PublishedDate { get; set; }
+        public string Duration { get; set; }
+
+        public List<string> Categories { get; set; }
     }
 }
