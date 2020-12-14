@@ -77,6 +77,7 @@ namespace AudioBooks.Web
                 options.Scope.Add("email");
                 options.Scope.Add("address");
                 options.Scope.Add("roles");
+                options.Scope.Add("operations");
                 options.Scope.Add("audiobooksapi");
 
                 /*Delete from the ID_TOken*/

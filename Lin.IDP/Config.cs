@@ -35,6 +35,7 @@ namespace Lin.IDP
                 ,new IdentityResources.Email()
                 ,new IdentityResources.Address()
                 ,new IdentityResource("roles","Your Role (s)", new List<string>{"role"})
+               ,new IdentityResource("operations","Allowed Operations (s)", new List<string>{"operation"})
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -51,7 +52,7 @@ namespace Lin.IDP
                     Name="audiobooksapi",
                     DisplayName="Audiobooks Api",
                     Scopes={ "audiobooksapi" },
-                    UserClaims = new List<string>() { "role", "given_name" }
+                    UserClaims = new List<string>() { "role","operations", "given_name" }
                 }
             };
 
@@ -74,6 +75,7 @@ namespace Lin.IDP
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.Address,
                     "roles",
+                    "operations",
                     "audiobooksapi"
                 },
                 ClientSecrets={new Secret("test_secret".Sha256())},

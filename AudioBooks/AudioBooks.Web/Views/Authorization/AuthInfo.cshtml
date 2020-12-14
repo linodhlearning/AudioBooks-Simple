@@ -1,0 +1,48 @@
+﻿@model AudioBooks.Web.Models.AuthInfoViewModel
+
+@{
+    ViewData["Title"] = "AuthInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+} 
+
+<h1>Auth Information</h1>
+<h4>Logged in Information Sourced from the IDP</h4>
+<div>
+    <h4>AuthInfoViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdToken)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdToken)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AccesToken)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AccesToken)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Operations)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Operations)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" asp-controller="Home">Back</a>
+</div>

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<AudioBooks.Model.LookupItemModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {   id= item.Id }) | 
+                    @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    @*@if (Model.CanAdd)
+    {*@
+        @using (Html.BeginForm("Add", "Lookup"))
+        {
+            <div class="button-container row"> 
+                <div class=" ">
+                    <button type="submit" class="btn btn-primary col-md-2"><i class="fa fa-plus"></i> Add New</button>
+                </div>
+            </div>
+        }
+    @*}*@
+</div>

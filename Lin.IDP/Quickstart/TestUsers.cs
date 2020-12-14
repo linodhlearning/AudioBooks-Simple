@@ -31,8 +31,8 @@ namespace IdentityServerHost.Quickstart.UI
                           new Claim("email","henry@superman.com"),
                           new Claim("address","15 krypton ave "),
                           new Claim("gender","male"),
-                          new Claim("role","customer")
-
+                          new Claim("role","customer"),
+                              new Claim("operations","view_customer|view_publishers")
                         }},
                     new TestUser
                     {
@@ -46,7 +46,8 @@ namespace IdentityServerHost.Quickstart.UI
                           new Claim("email","tobby@spiderman.com"),
                           new Claim("address","18 brooklyn ave "),
                           new Claim("gender","male"),
-                             new Claim("role","admin")
+                             new Claim("role","admin"),
+                               new Claim("operations","view_customer|view_publishers|manage_publishers|manage_audiobooks")
                         }
                     }
                 };

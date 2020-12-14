@@ -55,7 +55,7 @@ namespace AudioBooks.Web.Controllers
             model.Address = userInfo.Claims.FirstOrDefault(u => u.Type == "address")?.Value;
             model.Email = userInfo.Claims.FirstOrDefault(u => u.Type == "email")?.Value;
             model.Gender = userInfo.Claims.FirstOrDefault(u => u.Type == "gender")?.Value;
-            return await Task.Run(() => View("UserInformation", model));
+            return await Task.Run(() => View("UserInformation", model));//bad usage
         }
 
         public IActionResult Privacy()
