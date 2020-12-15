@@ -5,11 +5,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
+<style>
+    .section {
+        margin-bottom: 10px;
+    }
+</style>
 <div>
     <h2>Authors</h2>
     <div class="row  ">
         @{
             await Html.RenderPartialAsync("_LookupItem", Model.DataModel.Authors);
+        }
+    </div>
+    <div>
+        @using (Html.BeginForm("AddAuthor", "Lookup"))
+        {
+            <div class="button-container row">
+                <div class=" ">
+                    <a class="btn btn-primary" asp-controller="Author" asp-action="AddAuthor"><i class="fa fa-plus"></i> Add New</a>
+                </div>
+            </div>
         }
     </div>
 </div>
@@ -20,14 +35,29 @@
             await Html.RenderPartialAsync("_LookupItem", Model.DataModel.Catgegories);
         }
     </div>
-
+    @using (Html.BeginForm("AddCategory", "Lookup"))
+    {
+        <div class="button-container row">
+            <div class=" ">
+                <button type="submit" class="btn btn-primary "><i class="fa fa-plus"></i> Add New</button>
+            </div>
+        </div>
+    }
 </div>
 
-<div>
+<div class="section">
     <h2>Publishers</h2>
     <div class="row  ">
         @{
             await Html.RenderPartialAsync("_LookupItem", Model.DataModel.Publishers);
         }
     </div>
+    @using (Html.BeginForm("AddPublisher", "Lookup"))
+    {
+        <div class="button-container row">
+            <div class="">
+                <button type="submit" class="btn btn-primary "><i class="fa fa-plus"></i> Add New</button>
+            </div>
+        </div>
+    }
 </div>

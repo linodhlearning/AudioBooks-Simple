@@ -35,7 +35,7 @@ namespace AudioBooks.Web
             services.AddTransient<BearerTokenHandler>();
 
             // create an HttpClient used for accessing the API
-            services.AddHttpClient("AudioBooksAPIClient", client =>
+            services.AddHttpClient(Constants.APIClientNames.AudioBooksAPIClient, client =>
             {
                 var audioBookApiUri = _configuration.GetValue<string>("Apis:AudioBookApi");
                 client.BaseAddress = new Uri(audioBookApiUri);/*https://localhost:44305*/
@@ -47,23 +47,27 @@ namespace AudioBooks.Web
             var idpUri = _configuration.GetValue<string>("Apis:IDP");/*"https://localhost:55441/"*/
 
             // create an HttpClient used for accessing the API
-            services.AddHttpClient("LinIDPClient", client =>
+            services.AddHttpClient(Constants.APIClientNames.IDPClient, client =>
             {
                 client.BaseAddress = new Uri(idpUri);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
+             
+            this.ConfigureIDP(services, idpUri);
+        }
 
-
+        private void ConfigureIDP(IServiceCollection services, string idpUri)
+        {
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-             {
-                 options.AccessDeniedPath = "/Authorization/AccessDenied";
-             })
+            {
+                options.AccessDeniedPath = "/Authorization/AccessDenied";
+            })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -96,7 +100,6 @@ namespace AudioBooks.Web
                     RoleClaimType = JwtClaimTypes.Role
                 };
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

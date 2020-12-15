@@ -3,17 +3,16 @@ using AudioBooks.Model;
 using AudioBooks.Response;
 using AutoMapper;
 using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace AudioBooks.Api.Controllers
 {
-
-    [Route("api/lookupdata")]
+     
+    [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    //[Microsoft.AspNetCore.Authorization.Authorize]
     public class LookupDataController : BaseController
     {
         private readonly ILookupDataRepository _lookupDataRepository;
@@ -24,7 +23,7 @@ namespace AudioBooks.Api.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet(Name="lookupdata")]
         public async Task<IActionResult> GetLookupDataCacheData()
         {
             try
@@ -48,6 +47,53 @@ namespace AudioBooks.Api.Controllers
             {
                 this._telemetry.TrackException(ex);
                 var response = LookupResponse<AudioBookItemModel>.BuildErrorResponse("FailedGet", "Could not retrieve Authors data");
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("addauthor")]
+        public async Task<IActionResult> AddAuthor([FromBody] LookupItemModel author)
+        {
+            try
+            {
+                var id = await _lookupDataRepository.CreateAuthor(author);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                this._telemetry.TrackException(ex);
+                var response = LookupResponse<AudioBookItemModel>.BuildErrorResponse("FailedAddAuthor", "Could not add Author");
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("updateauthor")]
+        public async Task<IActionResult> UpdateAuthor([FromBody] LookupItemModel author)
+        {
+            try
+            {
+                var status = await _lookupDataRepository.UpdateAuthor(author);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+                this._telemetry.TrackException(ex);
+                var response = LookupResponse<AudioBookItemModel>.BuildErrorResponse("FailedUpadteAuthor", "Could not update Author");
+                return BadRequest(response);
+            }
+        }
+        [HttpPost("deleteauthor")]
+        public async Task<IActionResult> DeleteAuthor(int id)
+        {
+            try
+            {
+                var status = await _lookupDataRepository.DeleteAuthor(id);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+                this._telemetry.TrackException(ex);
+                var response = LookupResponse<AudioBookItemModel>.BuildErrorResponse("FailedUpadteAuthor", "Could not remove Author");
                 return BadRequest(response);
             }
         }

@@ -1,4 +1,5 @@
 ﻿using AudioBooks.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace AudioBooks.Web.Controllers
 {
+    [Authorize]
     public class LookupController : Controller
     {
  
@@ -23,7 +25,7 @@ namespace AudioBooks.Web.Controllers
 
         public async Task<IActionResult> Index()
         {  
-            var httpClient = _httpClientFactory.CreateClient("AudioBooksAPIClient");
+            var httpClient = _httpClientFactory.CreateClient(Constants.APIClientNames.AudioBooksAPIClient);
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/lookupdata");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);//.ConfigureAwait(false);// not needed for code .net core 
 
@@ -35,7 +37,8 @@ namespace AudioBooks.Web.Controllers
                 var viewModel = new LookupDataCacheViewModel(model);
                 return View(viewModel);
             }
-        } 
+        }
 
+     
     }
 }

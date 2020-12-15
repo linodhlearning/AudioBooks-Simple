@@ -27,7 +27,7 @@ namespace AudioBooks.Web.Controllers
         {
             await WriteOutIdentityInfo(); //to learn
 
-            var httpClient = _httpClientFactory.CreateClient("AudioBooksAPIClient");
+            var httpClient = _httpClientFactory.CreateClient(Constants.APIClientNames.AudioBooksAPIClient);
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/audiobooks");
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);//.ConfigureAwait(false);// not needed for code .net core 
 

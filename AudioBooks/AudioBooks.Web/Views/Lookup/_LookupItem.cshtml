@@ -12,40 +12,49 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecordOwnerId)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new {   id= item.Id }) | 
-                    @* @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecordOwnerId)
+            </td>
+            <td>
+
+                @Html.ActionLink("Edit", "EditAuthor", "Author",
+               new { id = item.Id, name = item.Name, description = item.Description },
+               new { @class = "btn btn-outline-info" })
+
+                |
+
+                @using (Html.BeginForm("DeleteAuthor", "Author"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="button-container row">
+                        <div class=" ">
+                            <button type="submit" class="btn btn-outline-warning"><i class="fa fa-cross"></i> Delete</button>
+                        </div>
+                    </div>
+                }
+
+            </td>
+        </tr>
         }
     </tbody>
 </table>
-<div>
-    @*@if (Model.CanAdd)
-    {*@
-        @using (Html.BeginForm("Add", "Lookup"))
-        {
-            <div class="button-container row"> 
-                <div class=" ">
-                    <button type="submit" class="btn btn-primary col-md-2"><i class="fa fa-plus"></i> Add New</button>
-                </div>
-            </div>
-        }
-    @*}*@
-</div>
+

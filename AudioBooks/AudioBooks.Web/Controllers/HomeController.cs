@@ -34,7 +34,7 @@ namespace AudioBooks.Web.Controllers
 
         public async Task<IActionResult> UserInfo()
         { 
-            var idpClient = _httpClientFactory.CreateClient("LinIDPClient");
+            var idpClient = _httpClientFactory.CreateClient(Constants.APIClientNames.IDPClient);
             var metaDataResponse = await idpClient.GetDiscoveryDocumentAsync();
             if (metaDataResponse.IsError)
             {

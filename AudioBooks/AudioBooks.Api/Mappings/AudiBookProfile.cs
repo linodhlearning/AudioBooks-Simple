@@ -19,9 +19,13 @@ namespace AudioBooks.Api.Mappings
                 .ForMember(dest => dest.AudibleLink, opt => opt.MapFrom(src => src.Audio.AudibleLink))
                  .ReverseMap();
 
-            CreateMap<Author, LookupItemModel>().ForMember(dest=> dest.Name,opt=>opt.MapFrom(src=> src.AuthorName));
-            CreateMap<Category, LookupItemModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CategoryName));
-            CreateMap<Publisher, LookupItemModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PublisherName));
+            CreateMap<Author, LookupItemModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.AuthorName))
+                .ReverseMap();
+             
+
+            CreateMap<Category, LookupItemModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CategoryName)).ReverseMap();
+            CreateMap<Publisher, LookupItemModel>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PublisherName)).ReverseMap();
 
             CreateMap<AudioBook, AudioBookItemModel>()
             .ForMember(dest => dest.AudioBookId, opt => opt.MapFrom(src => src.Id))

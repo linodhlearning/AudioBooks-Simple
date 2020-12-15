@@ -57,7 +57,7 @@ namespace AudioBooks.Api
             // register AutoMapper-related services
             //services.AddAutoMapper(typeof(Startup));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+             
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
         }

@@ -9,5 +9,7 @@ namespace AudioBooks.Domain
         [Column(TypeName = "varchar(200)")]
         public string AuthorName { get; set; }
         public List<AudioBook> AudioBooks { get; set; }
+
+        public string RecordOwnerId { get; set; }
     }
 }

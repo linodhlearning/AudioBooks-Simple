@@ -71,5 +71,32 @@ namespace AudioBooks.Api.Repositories
             }
             return publishers;
         }
+
+        public async Task<int> CreateAuthor(LookupItemModel model)
+        {
+            // todo: validate 
+            var author = _mapper.Map<Domain.Author>(model);
+            _context.Authors.Add(author);
+            _cache.Remove(CacheKeys.Authors);
+
+            await _context.SaveChangesAsync();
+            return author.Id;
+        }
+
+        public async Task<bool> UpdateAuthor(LookupItemModel model)
+        {
+            var author = _mapper.Map<Domain.Author>(model);
+            _context.Authors.Update(author);
+            _cache.Remove(CacheKeys.Authors);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteAuthor(int id)
+        {
+            var author = _context.Authors.FirstOrDefault(a => a.Id == id);
+            _context.Authors.Remove(author);
+            _cache.Remove(CacheKeys.Authors);
+            return await _context.SaveChangesAsync() > 0;
+        } 
     }
 }
