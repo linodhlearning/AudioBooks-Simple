@@ -91,8 +91,8 @@ namespace AudioBooks.Web.Controllers
             if (id > 0)
             {
                 var httpClient = _httpClientFactory.CreateClient(Constants.APIClientNames.AudioBooksAPIClient);
-                var request = new HttpRequestMessage(HttpMethod.Post, "/api/lookupdata/deleteauthor");                 
-                request.Content = new StringContent(JsonConvert.SerializeObject(new { id }), System.Text.Encoding.UTF8, "application/json");
+                var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/lookupdata/deleteauthor/{id}");                 
+                //request.Content = new StringContent(JsonConvert.SerializeObject(new { id }), System.Text.Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();  
             }

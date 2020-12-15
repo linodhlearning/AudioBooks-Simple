@@ -82,7 +82,8 @@ namespace AudioBooks.Api.Controllers
                 return BadRequest(response);
             }
         }
-        [HttpPost("deleteauthor")]
+        //[HttpPost("deleteauthor")] 
+        [HttpDelete("deleteauthor/{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
             try

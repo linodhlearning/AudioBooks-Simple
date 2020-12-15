@@ -93,10 +93,12 @@ namespace AudioBooks.Api.Repositories
 
         public async Task<bool> DeleteAuthor(int id)
         {
-            var author = _context.Authors.FirstOrDefault(a => a.Id == id);
+            var author =await _context.Authors.FindAsync(id);
+            if (author == null) return false;
+
             _context.Authors.Remove(author);
             _cache.Remove(CacheKeys.Authors);
             return await _context.SaveChangesAsync() > 0;
-        } 
+        }
     }
 }

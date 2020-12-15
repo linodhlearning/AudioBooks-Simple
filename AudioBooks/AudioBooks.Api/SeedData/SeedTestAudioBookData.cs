@@ -43,7 +43,7 @@ namespace AudioBooks.Api.SeedData
             var adventureCategoryId = dbContext.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == "adventure")?.Id;
             var thrillerCategoryId = dbContext.Categories.FirstOrDefault(c => c.CategoryName.ToLower() == "thriller")?.Id;
             Publisher penguinPublisher = new Publisher { PublisherName = "Penguin" };
-            Author leeChildAuthor = new Author { AuthorName = "Lee Child" };
+            Author leeChildAuthor = new Author { AuthorName = "Lee Child",RecordOwnerId= "8414619f-2189-4344-a57e-62aadb3b4e4f" };
 
             var audioBook1 = new AudioBook()
             {
